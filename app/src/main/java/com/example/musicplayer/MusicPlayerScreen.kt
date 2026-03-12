@@ -146,7 +146,12 @@ fun MusicPlayerAppBar(
     navigateUp: () -> Unit
 ) {
     TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
+        title = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(currentScreen.title)
+            )
+                },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,

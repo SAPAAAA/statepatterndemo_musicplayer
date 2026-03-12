@@ -26,10 +26,24 @@ fun PlaybackControls(
     modifier: Modifier = Modifier,
     baseSize: Dp = 64.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceEvenly,
+    isSkipEnabled: Boolean = true,
+    isPlayEnabled: Boolean = true
 ) {
     val playButtonSize = baseSize * 1.25f
     val playIconSize = baseSize
     val skipIconSize = baseSize * 0.75f
+
+    val skipIconTint = if (isSkipEnabled) {
+        MaterialTheme.colorScheme.onSurface
+    } else {
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    }
+
+    val playIconTint = if (isPlayEnabled) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
+    }
 
     Row(
         modifier = modifier,
@@ -44,7 +58,7 @@ fun PlaybackControls(
                 imageVector = Icons.Filled.SkipPrevious,
                 contentDescription = "Skip Previous",
                 modifier = Modifier.size(skipIconSize),
-                tint = MaterialTheme.colorScheme.onSurface
+                tint = skipIconTint
             )
         }
 
@@ -56,7 +70,7 @@ fun PlaybackControls(
                 imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                 contentDescription = if (isPlaying) "Pause" else "Play",
                 modifier = Modifier.size(playIconSize),
-                tint = MaterialTheme.colorScheme.primary
+                tint = playIconTint
             )
         }
 
@@ -68,7 +82,7 @@ fun PlaybackControls(
                 imageVector = Icons.Filled.SkipNext,
                 contentDescription = "Skip Next",
                 modifier = Modifier.size(skipIconSize),
-                tint = MaterialTheme.colorScheme.onSurface
+                tint = skipIconTint
             )
         }
     }

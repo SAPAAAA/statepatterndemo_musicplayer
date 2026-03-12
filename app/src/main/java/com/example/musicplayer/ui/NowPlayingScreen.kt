@@ -146,7 +146,8 @@ fun NowPlayingScreen(
             onPlayPauseClick = playerActions.onPlayPauseClick,
             onNextClick = playerActions.onNextClick,
             onPrevClick = playerActions.onPrevClick,
-            baseSize = dimensionResource(id = R.dimen.playback_control_base_size)
+            baseSize = dimensionResource(id = R.dimen.playback_control_base_size),
+            isSkipEnabled = uiState.songList.size > 1
         )
     }
 }

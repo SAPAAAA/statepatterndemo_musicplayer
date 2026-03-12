@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -98,21 +99,20 @@ fun SongListScreen(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = if (uiState.songList.isEmpty()) "It's empty here!\nTap to add a song." else "Tap to add a song.",
+                    text = if (uiState.songList.isEmpty()) "${stringResource(R.string.empty_list)}\n${stringResource(R.string.tap_to_add_a_song)}"
+                    else stringResource(R.string.tap_to_add_a_song),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.displaySmall,
                     textAlign = TextAlign.Center
                 )
             }
         }
-        if (uiState.currentSong != null) {
-            MiniPlayerBar(
-                modifier = Modifier,
-                uiState = uiState,
-                playerActions = playerActions,
-                navigateToNowPlaying = navigateToNowPlaying
-            )
-        }
+        MiniPlayerBar(
+            modifier = Modifier,
+            uiState = uiState,
+            playerActions = playerActions,
+            navigateToNowPlaying = navigateToNowPlaying
+        )
     }
 
 }
@@ -130,123 +130,141 @@ fun MiniPlayerBar(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        var sliderPosition by remember { mutableFloatStateOf(uiState.currentTimestampMs!!) }
-        val interactionSource = remember { MutableInteractionSource() }
-        val isHovered by interactionSource.collectIsHoveredAsState()
-        val isDragged by interactionSource.collectIsDraggedAsState()
+        // Only show up if a song is loaded into the media player
+        if (uiState.currentSong != null) {
+            var sliderPosition by remember { mutableFloatStateOf(uiState.currentTimestampMs!!) }
+            val interactionSource = remember { MutableInteractionSource() }
+            val isHovered by interactionSource.collectIsHoveredAsState()
+            val isDragged by interactionSource.collectIsDraggedAsState()
 
-        val thumbSize by animateDpAsState(
-            targetValue = if (isDragged || isHovered) dimensionResource(R.dimen.thumb_drag_size) else dimensionResource(R.dimen.thumb_normal_size),
-            animationSpec = tween(durationMillis = 150),
-            label = "thumbSize"
-        )
+            val thumbSize by animateDpAsState(
+                targetValue = if (isDragged || isHovered) dimensionResource(R.dimen.thumb_drag_size) else dimensionResource(R.dimen.thumb_normal_size),
+                animationSpec = tween(durationMillis = 150),
+                label = "thumbSize"
+            )
 
-        val haloSize by animateDpAsState(
-            targetValue = if (isHovered || isDragged) 24.dp else 0.dp,
-            label = "haloSize"
-        )
-        val haloAlpha by animateFloatAsState(
-            targetValue = if (isHovered || isDragged) 0.2f else 0f,
-            label = "haloAlpha"
-        )
+            val haloSize by animateDpAsState(
+                targetValue = if (isHovered || isDragged) 24.dp else 0.dp,
+                label = "haloSize"
+            )
+            val haloAlpha by animateFloatAsState(
+                targetValue = if (isHovered || isDragged) 0.2f else 0f,
+                label = "haloAlpha"
+            )
 
-        LaunchedEffect(uiState.currentTimestampMs) {
-            if (!isDragged) {
-                sliderPosition = uiState.currentTimestampMs!!
+            LaunchedEffect(uiState.currentTimestampMs) {
+                if (!isDragged) {
+                    sliderPosition = uiState.currentTimestampMs!!
+                }
             }
-        }
 
-        // Progress Slider
-        @OptIn(ExperimentalMaterial3Api::class)
-        Slider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(R.dimen.slider_height)),
-            value = sliderPosition,
-            valueRange = 0f..uiState.currentSong!!.duration,
-            interactionSource = interactionSource,
-            onValueChange = { newValue ->
-                sliderPosition = newValue
-            },
-            onValueChangeFinished = {
-                playerActions.onSeekClick(sliderPosition)
-            },
-            colors = SliderDefaults.colors(
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
-            thumb = {
-                Box(
-                    modifier = Modifier
-                        .width(0.dp)
-                        .height(16.dp)
-                        .clickable(
-                            interactionSource = interactionSource,
-                            indication = null,
-                            onClick = {}
+            // Progress Slider
+            @OptIn(ExperimentalMaterial3Api::class)
+            Slider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(R.dimen.slider_height)),
+                value = sliderPosition,
+                valueRange = 0f..uiState.currentSong.duration,
+                interactionSource = interactionSource,
+                onValueChange = { newValue ->
+                    sliderPosition = newValue
+                },
+                onValueChangeFinished = {
+                    playerActions.onSeekClick(sliderPosition)
+                },
+                colors = SliderDefaults.colors(
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
+                thumb = {
+                    Box(
+                        modifier = Modifier
+                            .width(0.dp)
+                            .height(16.dp)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                                onClick = {}
+                            ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .requiredSize(haloSize)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = haloAlpha),
+                                    shape = CircleShape
+                                )
+                        )
+                        Box(
+                            modifier = Modifier
+                                .requiredSize(thumbSize)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape
+                                )
+                        )
+                    }
+                },
+                track = { sliderState ->
+                    SliderDefaults.Track(
+                        sliderState = sliderState,
+                        modifier = Modifier
+                            .height(dimensionResource(R.dimen.track_height))
+                            .padding(0.dp),
+                        colors = SliderDefaults.colors(
+                            activeTrackColor = MaterialTheme.colorScheme.primary,
+                            inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
                         ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .requiredSize(haloSize)
-                            .background(
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = haloAlpha),
-                                shape = CircleShape
-                            )
-                    )
-                    Box(
-                        modifier = Modifier
-                            .requiredSize(thumbSize)
-                            .background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = CircleShape
-                            )
+                        drawStopIndicator = null,
+                        thumbTrackGapSize = 0.dp,
+                        trackInsideCornerSize = 0.dp
                     )
                 }
-            },
-            track = { sliderState ->
-                SliderDefaults.Track(
-                    sliderState = sliderState,
-                    modifier = Modifier
-                        .height(dimensionResource(R.dimen.track_height))
-                        .padding(0.dp),
-                    colors = SliderDefaults.colors(
-                        activeTrackColor = MaterialTheme.colorScheme.primary,
-                        inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
-                    drawStopIndicator = null,
-                    thumbTrackGapSize = 0.dp,
-                    trackInsideCornerSize = 0.dp
-                )
-            }
-        )
+            )
+        }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = navigateToNowPlaying),
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {
+                        if (uiState.currentSong != null) {
+                            navigateToNowPlaying()
+                        }
+                    }
+                ),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.medium_thumbnail_image_size)),
-                model = uiState.currentSong.artFilePath,
-                contentDescription = "${uiState.currentSong.title} by ${uiState.currentSong.artist}",
-                contentScale = ContentScale.Crop
-            )
+            if (uiState.currentSong != null) {
+                AsyncImage(
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.medium_thumbnail_image_size)),
+                    model = uiState.currentSong.artFilePath,
+                    contentDescription = "${uiState.currentSong.title} by ${uiState.currentSong.artist}",
+                    contentScale = ContentScale.Crop
+                )
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = dimensionResource(R.dimen.small_padding))
-            ) {
-                Text(
-                    text = uiState.currentSong.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = dimensionResource(R.dimen.small_padding))
+                ) {
+                    Text(
+                        text = uiState.currentSong.title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1
+                    )
+                }
+            } else {
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
                 )
             }
 
@@ -258,7 +276,9 @@ fun MiniPlayerBar(
                 modifier = Modifier
                     .padding(horizontal = dimensionResource(R.dimen.small_padding)),
                 baseSize = dimensionResource(R.dimen.mini_player_control_base_size),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
+                isSkipEnabled = uiState.songList.size > 1 && uiState.currentSong != null,
+                isPlayEnabled = uiState.songList.isNotEmpty(),
             )
         }
 
@@ -303,7 +323,7 @@ fun SongItemCard(
                         top = dimensionResource(R.dimen.small_padding),
                         bottom = dimensionResource(R.dimen.small_padding),
                         end = dimensionResource(R.dimen.small_padding),
-                        )
+                    )
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding))
             ) {

@@ -75,6 +75,11 @@ class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
         play()
     }
 
+    fun loadRandomSong() {
+        val randomSong = currentSongList.value.random()
+        loadSong(randomSong)
+    }
+
     fun nextTrack() {
         val list = _currentSongList.value
         if (list.isEmpty()) return

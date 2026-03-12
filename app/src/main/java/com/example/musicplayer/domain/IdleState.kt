@@ -7,6 +7,10 @@ class IdleState : PlayerState {
         if (playerContext.currentSong.value != null) {
             playerContext.startAudio()
             playerContext.transitionTo(PlayingState(playerContext))
+        } else {
+            if (playerContext.currentSongList.value.isNotEmpty()) {
+                playerContext.loadRandomSong()
+            }
         }
     }
     override fun onNext() {}

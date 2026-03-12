@@ -2,4 +2,6 @@
     <string name="app_name">MusicPlayer</string>
     <string name="add_song">Add Song</string>
     <string name="now_playing">Now Playing</string>
+    <string name="empty_list">It\'s empty here!</string>
+    <string name="tap_to_add_a_song">Tap to add a song.</string>
 </resources>
