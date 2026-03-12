@@ -89,7 +89,11 @@ fun SongListScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .clickable { onAddSongClick() },
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onAddSongClick
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
