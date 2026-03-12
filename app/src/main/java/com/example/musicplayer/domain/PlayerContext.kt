@@ -48,7 +48,6 @@ class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
     fun next() = this.playerState.onNext()
     fun prev() = this.playerState.onPrev()
     fun lock() = this.playerState.onLock()
-
     fun seek(timestampMs: Float) = this.playerState.onSeek(timestampMs)
 
     fun startAudio() {

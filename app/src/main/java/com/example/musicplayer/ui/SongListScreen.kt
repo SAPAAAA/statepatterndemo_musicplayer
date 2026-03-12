@@ -65,38 +65,15 @@ fun SongListScreen(
     playerActions: PlayerActions,
     navigateToNowPlaying: () -> Unit = { }
 ) {
-    if (uiState.songList.isEmpty()) {
-        Box(
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
-                .fillMaxSize()
-                .clickable { onAddSongClick() },
-            contentAlignment = Alignment.Center,
-        ) {
-            Column(
-                modifier = Modifier,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(64.dp),
-                    imageVector = Icons.Default.AddCircle, contentDescription = stringResource(R.string.add_song),
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "It's empty here!\nTap anywhere to add an item.",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.displaySmall,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    } else {
-        Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .fillMaxHeight()) {
             LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding)),
                 contentPadding = PaddingValues(dimensionResource(R.dimen.small_padding))
             ) {
                 items(uiState.songList) { song ->
@@ -107,16 +84,37 @@ fun SongListScreen(
                     )
                 }
             }
-            if (uiState.currentSong != null) {
-                MiniPlayerBar(
-                    modifier = Modifier,
-                    uiState = uiState,
-                    playerActions = playerActions,
-                    navigateToNowPlaying = navigateToNowPlaying
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .clickable { onAddSongClick() },
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(64.dp),
+                    imageVector = Icons.Default.AddCircle, contentDescription = stringResource(R.string.add_song),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = if (uiState.songList.isEmpty()) "It's empty here!\nTap to add a song." else "Tap to add a song.",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displaySmall,
+                    textAlign = TextAlign.Center
                 )
             }
         }
+        if (uiState.currentSong != null) {
+            MiniPlayerBar(
+                modifier = Modifier,
+                uiState = uiState,
+                playerActions = playerActions,
+                navigateToNowPlaying = navigateToNowPlaying
+            )
+        }
     }
+
 }
 
 @Suppress("D")
