@@ -28,10 +28,6 @@ class AndroidAudioPlayer(private val context: Context) : AudioPlayer {
     override val currentTimestampMs: StateFlow<Float>
         get() = _currentTimestampMs.asStateFlow()
 
-    private val _isPlaying = MutableStateFlow(false)
-    override val isPlaying: StateFlow<Boolean>
-        get() = _isPlaying.asStateFlow()
-
     private val _onPlaybackCompleted = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     override val onPlaybackCompleted: SharedFlow<Unit>
         get() = _onPlaybackCompleted.asSharedFlow()
@@ -44,7 +40,6 @@ class AndroidAudioPlayer(private val context: Context) : AudioPlayer {
                     prepare()
 
                     setOnCompletionListener {
-                        _isPlaying.value = false
                         stopProgressTracker()
                         _onPlaybackCompleted.tryEmit(Unit)
 
@@ -52,17 +47,14 @@ class AndroidAudioPlayer(private val context: Context) : AudioPlayer {
                 }
             }
             mediaPlayer?.start()
-            _isPlaying.value = true
             startProgressTracker()
         } catch (e: Exception) {
             e.printStackTrace()
-            _isPlaying.value = false
         }
     }
 
     override fun pause() {
         mediaPlayer?.pause()
-        _isPlaying.value = false
         stopProgressTracker()
     }
 
@@ -72,7 +64,6 @@ class AndroidAudioPlayer(private val context: Context) : AudioPlayer {
         mediaPlayer?.release()
         mediaPlayer = null
 
-        _isPlaying.value = false
         _currentTimestampMs.value = 0F
     }
 

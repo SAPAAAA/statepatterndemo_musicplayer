@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface AudioPlayer {
     val currentTimestampMs: StateFlow<Float>
-    val isPlaying: StateFlow<Boolean>
 
     val onPlaybackCompleted: SharedFlow<Unit>
 

@@ -7,6 +7,8 @@ abstract class PlayerState {
         this.playerContext = context
     }
 
+    abstract val isPlaying: Boolean
+
     abstract fun getType(): SimpleState
     abstract fun onNext()
     abstract fun onPrev()

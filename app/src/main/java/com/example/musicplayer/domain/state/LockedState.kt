@@ -6,6 +6,9 @@ class LockedState : PlayerState {
         this.prevState = prevState
     }
 
+    override val isPlaying: Boolean
+        get() = prevState.isPlaying
+
     override fun getType(): SimpleState = SimpleState.LOCKED
 
     override fun onPlay() {}

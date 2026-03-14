@@ -1,9 +1,12 @@
 package com.example.musicplayer.ui
 
+import androidx.compose.runtime.LongState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicplayer.domain.state.PlayerContext
 import com.example.musicplayer.domain.model.SongRepository
+import com.example.musicplayer.domain.state.LockedState
+import com.example.musicplayer.domain.state.SimpleState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -16,14 +19,13 @@ class PlayerViewModel(
     val uiState = combine(
         playerContext.currentState,
         playerContext.currentSong,
-        playerContext.isPlaying,
         playerContext.currentTimestampMs,
         playerContext.currentSongList,
-    ) { state, song, playing, timestamp, list ->
+    ) { state, song, timestamp, list ->
         PlayerUiState(
             currentState = state.getType(),
             currentSong = song,
-            isPlaying = playing,
+            isPlaying = state.isPlaying,
             currentTimestampMs = timestamp,
             songList = list
         )

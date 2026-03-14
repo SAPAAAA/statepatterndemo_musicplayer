@@ -21,7 +21,6 @@ class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
     val currentSong = _currentSong.asStateFlow()
 
     val currentTimestampMs = playerAudioPlayer.currentTimestampMs
-    val isPlaying = playerAudioPlayer.isPlaying
 
     private val _currentSongList = MutableStateFlow<List<SongMetadata>>(emptyList())
     val currentSongList = _currentSongList.asStateFlow()

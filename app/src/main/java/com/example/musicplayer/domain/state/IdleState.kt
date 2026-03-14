@@ -3,6 +3,8 @@ package com.example.musicplayer.domain.state
 class IdleState : PlayerState {
     constructor(context: PlayerContext) : super(context)
 
+    override val isPlaying: Boolean = false
+
     override fun getType(): SimpleState = SimpleState.IDLE
 
     override fun onPlay() {
