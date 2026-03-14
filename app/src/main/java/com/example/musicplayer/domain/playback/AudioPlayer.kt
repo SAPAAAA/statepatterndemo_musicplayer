@@ -1,4 +1,4 @@
-package com.example.musicplayer.domain
+package com.example.musicplayer.domain.playback
 
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow

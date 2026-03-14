@@ -1,4 +1,4 @@
-package com.example.musicplayer.domain
+package com.example.musicplayer.domain.state
 
 abstract class PlayerState {
     protected var playerContext: PlayerContext

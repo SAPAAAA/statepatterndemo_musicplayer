@@ -1,5 +1,7 @@
-package com.example.musicplayer.domain
+package com.example.musicplayer.domain.state
 
+import com.example.musicplayer.domain.playback.AudioPlayer
+import com.example.musicplayer.domain.model.SongMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

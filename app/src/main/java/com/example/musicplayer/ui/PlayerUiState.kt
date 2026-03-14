@@ -1,7 +1,7 @@
 package com.example.musicplayer.ui
 
-import com.example.musicplayer.domain.SimpleState
-import com.example.musicplayer.domain.SongMetadata
+import com.example.musicplayer.domain.state.SimpleState
+import com.example.musicplayer.domain.model.SongMetadata
 
 data class PlayerUiState(
     val currentSong: SongMetadata? = null,

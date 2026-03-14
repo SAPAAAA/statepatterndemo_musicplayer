@@ -2,8 +2,8 @@ package com.example.musicplayer.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicplayer.domain.PlayerContext
-import com.example.musicplayer.domain.SongRepository
+import com.example.musicplayer.domain.state.PlayerContext
+import com.example.musicplayer.domain.model.SongRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn

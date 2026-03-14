@@ -1,4 +1,4 @@
-package com.example.musicplayer.domain
+package com.example.musicplayer.domain.model
 
 data class SongMetadata(
     val uriString: String,

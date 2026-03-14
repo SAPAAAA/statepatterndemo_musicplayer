@@ -1,4 +1,4 @@
-package com.example.musicplayer.domain
+package com.example.musicplayer.domain.state
 
 enum class SimpleState {
     IDLE,
