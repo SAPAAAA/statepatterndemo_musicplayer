@@ -12,14 +12,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
-    private var playerState: PlayerState = IdleState(this)
+    private val _currentState = MutableStateFlow<PlayerState>(IdleState(this))
+    val currentState = _currentState.asStateFlow()
+
     private val contextScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val _currentSong = MutableStateFlow<SongMetadata?>(null)
     val currentSong = _currentSong.asStateFlow()
-
-    private val _currentState = MutableStateFlow(SimpleState.IDLE)
-    val currentState = _currentState.asStateFlow()
 
     val currentTimestampMs = playerAudioPlayer.currentTimestampMs
     val isPlaying = playerAudioPlayer.isPlaying
@@ -36,21 +35,14 @@ class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
     }
 
     fun transitionTo(state: PlayerState) {
-        playerState = state
-        _currentState.value = when (state) {
-            is IdleState -> SimpleState.IDLE
-            is PlayingState -> SimpleState.PLAYING
-            is PausedState -> SimpleState.PAUSED
-            is LockedState -> SimpleState.LOCKED
-            else -> SimpleState.IDLE
-        }
+        _currentState.value = state
     }
 
-    fun play() = this.playerState.onPlay()
-    fun next() = this.playerState.onNext()
-    fun prev() = this.playerState.onPrev()
-    fun lock() = this.playerState.onLock()
-    fun seek(timestampMs: Float) = this.playerState.onSeek(timestampMs)
+    fun play() = this._currentState.value.onPlay()
+    fun next() = this._currentState.value.onNext()
+    fun prev() = this._currentState.value.onPrev()
+    fun lock() = this._currentState.value.onLock()
+    fun seek(timestampMs: Float) = this._currentState.value.onSeek(timestampMs)
 
     fun startAudio() {
         val song = _currentSong.value ?: return

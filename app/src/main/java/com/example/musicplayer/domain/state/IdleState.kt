@@ -3,6 +3,8 @@ package com.example.musicplayer.domain.state
 class IdleState : PlayerState {
     constructor(context: PlayerContext) : super(context)
 
+    override fun getType(): SimpleState = SimpleState.IDLE
+
     override fun onPlay() {
         if (playerContext.currentSong.value != null) {
             playerContext.startAudio()

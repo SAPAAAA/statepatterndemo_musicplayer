@@ -1,0 +1,77 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+
+title State Design Pattern - Android Music Player
+
+class PlayerContext {
+  - currentState: PlayerState
+  + setState(state: PlayerState)
+  + play()
+  + next()
+  + prev()
+  + seek(position: Int)
+  + lock()
+}
+
+abstract class PlayerState {
+  # context: PlayerContext
+  + onPlay()
+  + onNext()
+  + onPrev()
+  + onSeek(position: Int)
+  + onLock()
+}
+
+class IdleState {
+  + onPlay()
+  + onNext()
+  + onPrev()
+  + onSeek(position: Int)
+  + onLock()
+}
+
+class PlayingState {
+  + onPlay()
+  + onNext()
+  + onPrev()
+  + onSeek(position: Int)
+  + onLock()
+}
+
+class PausedState {
+  + onPlay()
+  + onNext()
+  + onPrev()
+  + onSeek(position: Int)
+  + onLock()
+}
+
+class LockedState {
+  - previousState: PlayerState
+  + onPlay()
+  + onNext()
+  + onPrev()
+  + onSeek(position: Int)
+  + onLock()
+}
+
+note left of PlayerContext
+  The Context delegates user actions
+  to the current state object.
+end note
+
+note right of LockedState
+  Acts as a decorator-like state.
+  Ignores playback commands until unlocked,
+  then restores previousState.
+end note
+
+PlayerContext o-> PlayerState : " maintains state"
+PlayerState <|-- IdleState
+PlayerState <|-- PlayingState
+PlayerState <|-- PausedState
+PlayerState <|-- LockedState
+PlayerState <|-- SimpleState
+
+@enduml

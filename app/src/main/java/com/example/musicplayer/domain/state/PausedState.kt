@@ -3,6 +3,8 @@ package com.example.musicplayer.domain.state
 class PausedState : PlayerState {
     constructor(context: PlayerContext) : super(context)
 
+    override fun getType(): SimpleState = SimpleState.PAUSED
+
     override fun onPlay() {
         playerContext.startAudio()
         playerContext.transitionTo(PlayingState(playerContext))

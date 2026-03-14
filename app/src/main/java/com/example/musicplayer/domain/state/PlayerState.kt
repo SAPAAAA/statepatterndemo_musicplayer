@@ -7,6 +7,7 @@ abstract class PlayerState {
         this.playerContext = context
     }
 
+    abstract fun getType(): SimpleState
     abstract fun onNext()
     abstract fun onPrev()
     abstract fun onPlay()

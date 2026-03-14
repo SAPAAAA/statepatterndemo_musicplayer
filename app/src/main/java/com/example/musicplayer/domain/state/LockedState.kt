@@ -6,6 +6,8 @@ class LockedState : PlayerState {
         this.prevState = prevState
     }
 
+    override fun getType(): SimpleState = SimpleState.LOCKED
+
     override fun onPlay() {}
     override fun onNext() {}
     override fun onPrev() {}

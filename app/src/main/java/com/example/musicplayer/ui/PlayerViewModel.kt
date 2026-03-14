@@ -21,7 +21,7 @@ class PlayerViewModel(
         playerContext.currentSongList,
     ) { state, song, playing, timestamp, list ->
         PlayerUiState(
-            currentState = state,
+            currentState = state.getType(),
             currentSong = song,
             isPlaying = playing,
             currentTimestampMs = timestamp,
