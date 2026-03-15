@@ -6,28 +6,35 @@ title State Design Pattern - Android Music Player
 
 class PlayerContext {
   - currentState: PlayerState
-  + setState(state: PlayerState)
+  - playerAudioPlayer: AudioPlayer
+  + transitionTo(state: PlayerState)
   + play()
   + next()
   + prev()
-  + seek(position: Int)
+  + seek(timestampMs: Float)
   + lock()
+  + startAudio()
+  + pauseAudio()
+  + stopAudio()
+  + loadSong(song: SongMetadata)
+  + nextTrack()
+  + prevTrack()
 }
 
 abstract class PlayerState {
-  # context: PlayerContext
-  + onPlay()
-  + onNext()
-  + onPrev()
-  + onSeek(position: Int)
-  + onLock()
+  # playerContext: PlayerContext
+  + {abstract} onPlay()
+  + {abstract} onNext()
+  + {abstract} onPrev()
+  + {abstract} onSeek(timestampMs: Float)
+  + {abstract} onLock()
 }
 
 class IdleState {
   + onPlay()
   + onNext()
   + onPrev()
-  + onSeek(position: Int)
+  + onSeek(timestampMs: Float)
   + onLock()
 }
 
@@ -35,7 +42,7 @@ class PlayingState {
   + onPlay()
   + onNext()
   + onPrev()
-  + onSeek(position: Int)
+  + onSeek(timestampMs: Float)
   + onLock()
 }
 
@@ -43,16 +50,16 @@ class PausedState {
   + onPlay()
   + onNext()
   + onPrev()
-  + onSeek(position: Int)
+  + onSeek(timestampMs: Float)
   + onLock()
 }
 
 class LockedState {
-  - previousState: PlayerState
+  - prevState: PlayerState
   + onPlay()
   + onNext()
   + onPrev()
-  + onSeek(position: Int)
+  + onSeek(timestampMs: Float)
   + onLock()
 }
 
@@ -64,7 +71,7 @@ end note
 note right of LockedState
   Acts as a decorator-like state.
   Ignores playback commands until unlocked,
-  then restores previousState.
+  then restores prevState.
 end note
 
 PlayerContext o-> PlayerState : " maintains state"
@@ -72,6 +79,5 @@ PlayerState <|-- IdleState
 PlayerState <|-- PlayingState
 PlayerState <|-- PausedState
 PlayerState <|-- LockedState
-PlayerState <|-- SimpleState
 
 @enduml
