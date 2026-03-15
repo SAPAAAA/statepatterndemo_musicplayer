@@ -15,4 +15,5 @@ abstract class PlayerState {
     abstract fun onPlay()
     abstract fun onLock()
     abstract fun onSeek(timestampMs: Float)
+    abstract fun onPlaybackCompleted()
 }

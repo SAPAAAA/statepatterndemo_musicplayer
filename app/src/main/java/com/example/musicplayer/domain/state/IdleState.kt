@@ -8,19 +8,26 @@ class IdleState : PlayerState {
     override fun getType(): SimpleState = SimpleState.IDLE
 
     override fun onPlay() {
-        if (playerContext.currentSong.value != null) {
-            playerContext.startAudio()
-            playerContext.transitionTo(PlayingState(playerContext))
-        } else {
-            if (playerContext.currentSongList.value.isNotEmpty()) {
-                playerContext.loadRandomSong()
-            }
+        if (playerContext.currentSongList.value.isNotEmpty()) {
+            playerContext.loadRandomSong()
         }
+        playerContext.startAudio()
+        playerContext.transitionTo(PlayingState(playerContext))
+
     }
-    override fun onNext() {}
-    override fun onPrev() {}
-    override fun onSeek(timestampMs: Float) {}
+    override fun onNext() {
+        /* Do nothing */
+    }
+    override fun onPrev() {
+        /* Do nothing */
+    }
+    override fun onSeek(timestampMs: Float) {
+        /* Do nothing */
+    }
     override fun onLock() {
         playerContext.transitionTo(LockedState(playerContext, this))
+    }
+    override fun onPlaybackCompleted() {
+        /* Do nothing */
     }
 }

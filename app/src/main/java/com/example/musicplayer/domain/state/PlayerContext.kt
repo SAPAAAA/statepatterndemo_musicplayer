@@ -28,7 +28,7 @@ class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
     init {
         contextScope.launch {
             playerAudioPlayer.onPlaybackCompleted.collect {
-                next()
+                this@PlayerContext._currentState.value.onPlaybackCompleted()
             }
         }
     }
@@ -65,7 +65,6 @@ class PlayerContext(private val playerAudioPlayer: AudioPlayer) {
         stopAudio()
         _currentSong.value = song
         transitionTo(IdleState(this))
-        play()
     }
 
     fun loadRandomSong() {

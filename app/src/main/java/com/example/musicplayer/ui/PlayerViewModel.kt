@@ -53,8 +53,6 @@ class PlayerViewModel(
 
             if (savedSong != null) {
                 playerContext.addSong(savedSong)
-                playerContext.loadSong(savedSong)
-                playerContext.play()
             }
         }
     }
@@ -68,6 +66,7 @@ class PlayerViewModel(
     fun onSongSelected(uriString: String) {
         val selectedSong = uiState.value.songList.first { it.uriString == uriString }
         playerContext.loadSong(selectedSong)
+        playerContext.play()
     }
 
     override fun onCleared() {

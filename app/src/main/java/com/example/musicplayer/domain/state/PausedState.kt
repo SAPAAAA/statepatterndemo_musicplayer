@@ -32,4 +32,8 @@ class PausedState : PlayerState {
     override fun onLock() {
         playerContext.transitionTo(LockedState(playerContext, this))
     }
+
+    override fun onPlaybackCompleted() {
+        onNext()
+    }
 }

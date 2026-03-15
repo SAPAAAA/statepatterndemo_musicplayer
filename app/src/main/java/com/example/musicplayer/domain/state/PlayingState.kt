@@ -20,7 +20,6 @@ class PlayingState : PlayerState {
     override fun onPrev() {
         playerContext.prevTrack()
         playerContext.startAudio()
-        playerContext.transitionTo(PlayingState(playerContext))
     }
 
     override fun onSeek(timestampMs: Float) {
@@ -29,5 +28,9 @@ class PlayingState : PlayerState {
 
     override fun onLock() {
         playerContext.transitionTo(LockedState(playerContext, this))
+    }
+
+    override fun onPlaybackCompleted() {
+        onNext()
     }
 }

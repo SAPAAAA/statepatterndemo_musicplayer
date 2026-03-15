@@ -11,11 +11,22 @@ class LockedState : PlayerState {
 
     override fun getType(): SimpleState = SimpleState.LOCKED
 
-    override fun onPlay() {}
-    override fun onNext() {}
-    override fun onPrev() {}
-    override fun onSeek(timestampMs: Float) {}
+    override fun onPlay() {
+        /* Do nothing */
+    }
+    override fun onNext() {
+        /* Do nothing */
+    }
+    override fun onPrev() {
+        /* Do nothing */
+    }
+    override fun onSeek(timestampMs: Float) {
+        /* Do nothing */
+    }
     override fun onLock() {
         playerContext.transitionTo(prevState)
+    }
+    override fun onPlaybackCompleted() {
+        this.prevState.onNext()
     }
 }
