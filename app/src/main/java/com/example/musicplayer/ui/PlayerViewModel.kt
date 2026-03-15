@@ -1,12 +1,9 @@
 package com.example.musicplayer.ui
 
-import androidx.compose.runtime.LongState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicplayer.domain.state.PlayerContext
 import com.example.musicplayer.domain.model.SongRepository
-import com.example.musicplayer.domain.state.LockedState
-import com.example.musicplayer.domain.state.SimpleState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
