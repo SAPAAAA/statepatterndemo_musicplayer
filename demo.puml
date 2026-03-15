@@ -28,6 +28,7 @@ abstract class PlayerState {
   + {abstract} onPrev()
   + {abstract} onSeek(timestampMs: Float)
   + {abstract} onLock()
+  + {abstract} onPlaybackCompleted()
 }
 
 class IdleState {
@@ -36,6 +37,7 @@ class IdleState {
   + onPrev()
   + onSeek(timestampMs: Float)
   + onLock()
+  + onPlaybackCompleted()
 }
 
 class PlayingState {
@@ -44,6 +46,7 @@ class PlayingState {
   + onPrev()
   + onSeek(timestampMs: Float)
   + onLock()
+  + onPlaybackCompleted()
 }
 
 class PausedState {
@@ -52,6 +55,7 @@ class PausedState {
   + onPrev()
   + onSeek(timestampMs: Float)
   + onLock()
+  + onPlaybackCompleted()
 }
 
 class LockedState {
@@ -61,6 +65,7 @@ class LockedState {
   + onPrev()
   + onSeek(timestampMs: Float)
   + onLock()
+  + onPlaybackCompleted()
 }
 
 note left of PlayerContext
